@@ -161,7 +161,7 @@ jobs:
           root: .circleci
           paths:
             - ansible/inventory.txt  
-      - destroy-environment
+      #- destroy-environment
 
   configure-infrastructure:
     docker:
@@ -182,7 +182,7 @@ jobs:
           command: |
             ansible-playbook -i /tmp/ansible/inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure       
-      - destroy-environment
+      #- destroy-environment
 
   run-migrations:
     docker:
@@ -224,7 +224,7 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: bc0ecb36-991a-4dc2-a4a3-5fc4ea7814bd" --request PUT --data "Migration Failed" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
               curl -H "token: bc0ecb36-991a-4dc2-a4a3-5fc4ea7814bd" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
-      - destroy-environment
+      #- destroy-environment
 
      # Here's where you will add some code to rollback on failure       
 
@@ -267,7 +267,7 @@ jobs:
           root: .
           paths:
             - frontend/dist
-      - destroy-environment     
+      #- destroy-environment     
                     
   deploy-backend:
     docker:
@@ -302,7 +302,7 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> $myenv
             tar -cvf backend.tar backend
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.txt .circleci/ansible/deploy-backend.yml
-      - destroy-environment 
+      #- destroy-environment 
 
   smoke-test:
     docker:
@@ -336,8 +336,8 @@ jobs:
               exit 1
             fi
             
-      - destroy-environment 
-      - revert-migrations
+      #- destroy-environment 
+      #- revert-migrations
 
   cloudfront-update:
     docker:
@@ -370,7 +370,7 @@ jobs:
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             fi
 
-      - destroy-environment 
+      #- destroy-environment 
 
 
 
@@ -403,16 +403,16 @@ workflows:
             requires: [test-backend]
       - deploy-infrastructure:
             requires: [scan-frontend, scan-backend]
-      #- configure-infrastructure:
-      #      requires: [deploy-infrastructure]
-      #- run-migrations:
-      #      requires: [configure-infrastructure]
-      #- deploy-frontend:
-      #      requires: [run-migrations]
-      #- deploy-backend:
-      #      requires: [deploy-frontend]
-      #- smoke-test:
-      #      requires: [deploy-backend]
+      - configure-infrastructure:
+            requires: [deploy-infrastructure]
+      - run-migrations:
+            requires: [configure-infrastructure]
+      - deploy-frontend:
+            requires: [run-migrations]
+      - deploy-backend:
+            requires: [deploy-frontend]
+      - smoke-test:
+            requires: [deploy-backend]
       #- cloudfront-update:
       #      requires: [smoke-test]
       #- cleanup:

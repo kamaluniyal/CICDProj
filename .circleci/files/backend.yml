@@ -7,19 +7,11 @@ Parameters:
     Type: String
     Default: rndm1234
 
-Resources:
-  VPC: 
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: 172.30.0.0/16
-      EnableDnsHostnames: true
-
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub UdaPeople-${ID}
       GroupDescription: Allow port 22 and port 3030.
-      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22

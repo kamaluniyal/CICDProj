@@ -26,11 +26,11 @@
     ENVIRONMENT: production
     TYPEORM_CONNECTION: postgres
     TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
-    TYPEORM_HOST: $TYPEORM_HOST
-    TYPEORM_PORT: $TYPEORM_PORT
-    TYPEORM_USERNAME: $TYPEORM_USERNAME
-    TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-    TYPEORM_DATABASE: $TYPEORM_DATABASE
+    TYPEORM_HOST: database-1.c33s8e1dctat.us-west-2.rds.amazonaws.com
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: postgres
+    TYPEORM_PASSWORD: postgres
+    TYPEORM_DATABASE: glee
 
 
   roles:

@@ -199,11 +199,11 @@ jobs:
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> .env
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> .env
             echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> .env
-            echo TYPEORM_HOST=database-1.c33s8e1dctat.us-west-2.rds.amazonaws.com >> .env
-            echo TYPEORM_PORT=5432 >> .env
-            echo TYPEORM_USERNAME=postgres >> .env
-            echo TYPEORM_PASSWORD=postgres >> .env
-            echo TYPEORM_DATABASE=glee >> .env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> .env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> .env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
             ls -latr
             cat .env
             npm i

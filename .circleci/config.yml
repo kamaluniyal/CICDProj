@@ -303,7 +303,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> $myenv
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> $myenv
             tar -cvf backend.tar backend
-            cat inventory.txt
+            cat ansible/inventory.txt
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.txt .circleci/ansible/deploy-backend.yml
       #- destroy-environment 
 

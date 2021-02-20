@@ -311,20 +311,7 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
-      - run:
-          name: Get backend url & Backend smoke test.
-          command: |
-            sleep 6
-            back_ip=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
-             if curl -s "http://$back_ip:3030/api/status" | grep "ok"
-            then
-              echo "Backend alive, Proceeding"
-            else
-              echo "Debug Info Below"
-              curl -vvv "http://$back_ip:3030/api/status"
-              exit 1
-            fi
+      - checkout      
       - run:
           name: Frontend smoke test.
           command: |
@@ -412,7 +399,7 @@ workflows:
       - deploy-backend:
             requires: [deploy-frontend]
       - smoke-test:
-            requires: [deploy-backend]
+            requires: [run-migrations]
       - cloudfront-update:
             requires: [smoke-test]
       #- cleanup:

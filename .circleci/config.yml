@@ -263,7 +263,7 @@ jobs:
             npm run build
             s3Bucket=$(echo "udapeople-${CIRCLE_WORKFLOW_ID:0:7}")
             aws s3 sync dist s3://$s3Bucket/
-            s3FullUrl=("http://$s3Bucket.s3-website-eu-west-1.amazonaws.com")
+            s3FullUrl=("http://$s3Bucket.s3-website-us-west-2.amazonaws.com")
             curl -H "Content-Type: text/plain" -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request PUT --data "$s3FullUrl" https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID}
       - persist_to_workspace:
           root: .
@@ -315,32 +315,27 @@ jobs:
           name: Get backend url & Backend smoke test.
           command: |
             sleep 6
-           # back_ip=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
-           # echo back_ip
-           #  if curl -s "http://$back_ip:3030/api/status" | grep "ok"
-           # then
-           #   echo "Backend alive, Proceeding"
-           # else
-           #   echo "Debug Info Below"
-           #   curl -vvv "http://$back_ip:3030/api/status"
-           #   exit 1
-           # fi
-
+            back_ip=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
+             if curl -s "http://$back_ip:3030/api/status" | grep "ok"
+            then
+              echo "Backend alive, Proceeding"
+            else
+              echo "Debug Info Below"
+              curl -vvv "http://$back_ip:3030/api/status"
+              exit 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
-            front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
-          #  front_url =$"http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/"
-          #  echo front_url
-            if curl -s 'http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/' | grep "Welcome"
+            front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3booket_${CIRCLE_WORKFLOW_ID})
+            if curl -s ${front_url} | grep "Welcome"
             then
               echo "Frontend alive"
             else
               echo "Debug Info Below"
               url -vvv ${front_url}
               exit 1
-            fi
-            
+            fi          
       #- destroy-environment 
       #- revert-migrations
 

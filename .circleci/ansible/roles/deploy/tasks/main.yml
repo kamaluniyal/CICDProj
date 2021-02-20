@@ -6,11 +6,3 @@
   unarchive:
     src: ~/project/backend.tar
     dest: ~/
-
-- name: "start PM2"
-  become_user: ubuntu
-  become: yes
-  shell: |
-    cd ~/backend
-    npm i
-    pm2 start npm --name backend -- start

@@ -319,6 +319,8 @@ jobs:
             if curl -s ${front_url} | grep "Welcome"
             then
               echo "Frontend alive"
+            else
+              exit 1
             fi          
       #- destroy-environment 
       #- revert-migrations

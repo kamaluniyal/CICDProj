@@ -330,8 +330,8 @@ jobs:
           name: Frontend smoke test.
           command: |
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
-            front_url ="http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/"
-            echo front_url
+            front_url =$"http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/"
+          #  echo front_url
             if curl -s ${front_url} | grep "Welcome"
             then
               echo "Frontend alive"

@@ -314,20 +314,22 @@ jobs:
           name: Get backend url & Backend smoke test.
           command: |
             sleep 6
-           # back_ip=$(curl -H "token: bc0ecb36-991a-4dc2-a4a3-5fc4ea7814bd" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
-           #  if curl -s "http://$back_ip:3030/api/status" | grep "ok"
-           # then
-           #   echo "Backend alive, Proceeding"
-           # else
-           #   echo "Debug Info Below"
-           #   curl -vvv "http://$back_ip:3030/api/status"
-           #   exit 1
-           # fi
+            back_ip=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
+            echo back_ip
+             if curl -s "http://$back_ip:3030/api/status" | grep "ok"
+            then
+              echo "Backend alive, Proceeding"
+            else
+              echo "Debug Info Below"
+              curl -vvv "http://$back_ip:3030/api/status"
+              exit 1
+            fi
 
       - run:
           name: Frontend smoke test.
           command: |
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
+            echo front_url
             if curl -s ${front_url} | grep "Welcome"
             then
               echo "Frontend alive"

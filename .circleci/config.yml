@@ -332,7 +332,7 @@ jobs:
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
           #  front_url =$"http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/"
           #  echo front_url
-            if curl -s "http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/" | grep "Welcome"
+            if curl -s 'http://udapeople-33b57c8.s3-website-us-west-2.amazonaws.com/' | grep "Welcome"
             then
               echo "Frontend alive"
             else

@@ -314,12 +314,12 @@ jobs:
           name: Frontend smoke test.
           command: |
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
-           # if curl -s ${front_url} | grep "Welcome"
-           # then
-              echo 'intentional fail'
-              return 1
-            #  echo "pass"
-           # fi          
+            if curl -s ${front_url} | grep "Welcomecccc"
+            then
+              echo "pass"
+            else
+              return 1  
+            fi          
       - destroy-environment 
       - revert-migrations
 

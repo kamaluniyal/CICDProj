@@ -362,9 +362,15 @@ jobs:
         - run:
             name: Remove old stacks and files
             command: |
-              sleep 240
-              chmod 755 cleanup.sh
-              ./cleanup.sh
+              export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+
+              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
             
 
 workflows:

@@ -318,7 +318,7 @@ jobs:
             then
               echo "pass"
             else
-              return 1  
+              exit 1  
             fi          
       - destroy-environment 
       - revert-migrations

@@ -330,7 +330,7 @@ jobs:
           name: Update cloudfront distribution
           command: |
             echo "Update CloudFront"
-            check_for_id=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
+            check_for_id=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID1234\`].Value" --no-paginate --output text)
 
             if [ -z $check_for_id ]
             then
@@ -363,7 +363,7 @@ jobs:
             name: Remove old stacks and files
             command: |
               export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              list-exports --query "Exports[?Name==\`WorkflowID1234\`].Value" \
               --no-paginate --output text)
 
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \

@@ -5,7 +5,7 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
-    Default: rndm1234
+    Default: ${CIRCLE_WORKFLOW_ID:0:7}
 
 Resources:
   InstanceSecurityGroup:

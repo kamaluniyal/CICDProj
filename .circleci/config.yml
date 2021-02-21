@@ -161,7 +161,7 @@ jobs:
           root: .circleci
           paths:
             - ansible/inventory.txt  
-      #- destroy-environment
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -180,9 +180,8 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i /tmp/ansible/inventory.txt .circleci/ansible/configure-server.yml
-      # Here's where you will add some code to rollback on failure       
-      #- destroy-environment
+            ansible-playbook -i /tmp/ansible/inventory.txt .circleci/ansible/configure-server.yml     
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -224,9 +223,8 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request PUT --data "Migration Failed" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
               curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
-      #- destroy-environment
-
-     # Here's where you will add some code to rollback on failure       
+      - destroy-environment
+      
 
   deploy-frontend:
     docker:
@@ -269,7 +267,7 @@ jobs:
           root: .
           paths:
             - frontend/dist
-      #- destroy-environment     
+      - destroy-environment     
                     
   deploy-backend:
     docker:
@@ -305,7 +303,7 @@ jobs:
             tar -cvf backend.tar backend
             cat ansible/inventory.txt
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.txt .circleci/ansible/deploy-backend.yml
-      #- destroy-environment 
+      - destroy-environment 
 
   smoke-test:
     docker:
@@ -318,10 +316,12 @@ jobs:
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
             if curl -s ${front_url} | grep "Welcome"
             then
-              echo "pass"
+              echo "intentional fail"
+              return 1
+            #  echo "pass"
             fi          
-      #- destroy-environment 
-      #- revert-migrations
+      - destroy-environment 
+      - revert-migrations
 
   cloudfront-update:
     docker:
@@ -330,8 +330,6 @@ jobs:
       - checkout
       - run:
           name: Update cloudfront distribution
-          # If we have the cloudfront stack existing, update. if not then create from scratch
-          # Note to Make http only request. check cloudfront.yml
           command: |
             echo "Update CloudFront"
             check_for_id=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
@@ -354,7 +352,7 @@ jobs:
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             fi
 
-      #- destroy-environment 
+      - destroy-environment 
 
 
 
@@ -363,7 +361,6 @@ jobs:
         - image: amazon/aws-cli
       steps:
         - checkout
-        # Created script as Circle Ci doesn't like pipes
         - run:
             name: Remove old stacks and files
             command: |

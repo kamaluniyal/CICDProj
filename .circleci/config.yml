@@ -309,14 +309,24 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout      
+      - checkout
+      - run:
+          name: Get backend url & Backend smoke test.
+          command: |
+            back_ip=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/ec2_back_ip_${CIRCLE_WORKFLOW_ID})
+             if curl -s "http://$back_ip:3030/api/status" | grep "ok"
+            then
+              echo "API Working"
+            else
+              exit 1
+            fi      
       - run:
           name: Frontend smoke test.
           command: |
             front_url=$(curl -H "token: b2cea96f-97d6-4a40-9280-80527c9f9a74" --request GET https://api.memstash.io/values/s3bucket_${CIRCLE_WORKFLOW_ID})
             if curl -s ${front_url} | grep "Welcome"
             then
-              echo "pass"  
+              echo "Frontend Working"  
             fi          
       - destroy-environment 
       - revert-migrations

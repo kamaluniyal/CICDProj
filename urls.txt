@@ -1,3 +1,5 @@
 1. https://github.com/kamaluniyal/CICDProj
-2. 
-3. 
+2. http://udapeople-46c7e4b.s3-website-us-west-2.amazonaws.com/#/employees
+3. d201gokkwsxha3.cloudfront.net
+4. http://ec2-35-164-109-217.us-west-2.compute.amazonaws.com:3030/api/status
+5. http://ec2-34-220-181-25.us-west-2.compute.amazonaws.com:9090/graph
